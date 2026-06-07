@@ -1,0 +1,36 @@
+# CPU / no-NVIDIA-GPU variant of the HW1 setup.
+#
+# Use this instead of docker-compose.yml on machines WITHOUT an NVIDIA GPU (or
+# without the NVIDIA Container Toolkit). Gazebo/RViz render with Mesa software
+# OpenGL (llvmpipe) -- slower, but no special drivers required.
+#
+#   docker compose -f docker-compose.cpu.yml build
+#   docker compose -f docker-compose.cpu.yml up -d
+#   docker compose -f docker-compose.cpu.yml exec hw1 bash
+#
+# Or with the helper:   HW1_GPU=0 ./run.sh solution
+services:
+  hw1:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: robots101-hw1:latest
+    container_name: robots101_hw1
+    network_mode: host
+    ipc: host
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - ROS_DOMAIN_ID=0
+      - ROS_LOCALHOST_ONLY=1
+      - GAZEBO_MODEL_DATABASE_URI=
+      # Force Mesa software rendering (no GPU needed).
+      - LIBGL_ALWAYS_SOFTWARE=1
+      - GALLIUM_DRIVER=llvmpipe
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-${HOME}/.Xauthority}:/root/.Xauthority:rw
+      - ./output:/root/output:rw
+    # NOTE: no `runtime: nvidia` and no /dev/dri device -> runs on any host.
+    stdin_open: true
+    tty: true

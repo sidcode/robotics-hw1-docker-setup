@@ -1,0 +1,7 @@
+# Build context is the repo root. Keep it small / clean for the HW1 image.
+# NOTE: do not use broad patterns like **/install or **/build here -- husky_bringup
+# ships a program file literally named scripts/install that must be copied in.
+HW1.pdf
+**/.git
+**/__pycache__
+docker/output

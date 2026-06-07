@@ -1,0 +1,15 @@
+HW1
+*.pdf
+
+# colcon build artifacts (built inside the container)
+build/
+install/
+log/
+
+# python caches
+__pycache__/
+*.pyc
+
+# recordings / generated output (keep the folder, ignore its contents)
+docker/output/*
+!docker/output/.gitkeep
